@@ -1,14 +1,12 @@
 package pl.gregorymartin.akademiaspringaw3.controller;
 
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.event.EventListener;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.RestController;
 import pl.gregorymartin.akademiaspringaw3.model.Car;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;

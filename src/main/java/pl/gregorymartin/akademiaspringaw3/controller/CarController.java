@@ -1,9 +1,5 @@
 package pl.gregorymartin.akademiaspringaw3.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.event.EventListener;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -15,7 +11,6 @@ import pl.gregorymartin.akademiaspringaw3.model.Colors;
 import pl.gregorymartin.akademiaspringaw3.service.CarService;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

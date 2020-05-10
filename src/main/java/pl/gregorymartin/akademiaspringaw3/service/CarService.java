@@ -1,14 +1,11 @@
 package pl.gregorymartin.akademiaspringaw3.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import pl.gregorymartin.akademiaspringaw3.model.Car;
 import pl.gregorymartin.akademiaspringaw3.model.Colors;
 
-import javax.management.Query;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 
