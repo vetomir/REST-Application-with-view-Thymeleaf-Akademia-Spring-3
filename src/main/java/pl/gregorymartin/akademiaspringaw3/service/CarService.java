@@ -12,6 +12,7 @@ import java.util.Optional;
 @Service
 public class CarService {
     private List<Car> cars;
+    private HateoasService hateoasService;
 
     //
 
@@ -41,6 +42,7 @@ public class CarService {
 
     public boolean addNewCar(Car car){
         cars.add(car);
+
         return true;
     }
 

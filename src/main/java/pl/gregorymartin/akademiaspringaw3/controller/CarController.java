@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.gregorymartin.akademiaspringaw3.model.Car;
 import pl.gregorymartin.akademiaspringaw3.model.Colors;
 import pl.gregorymartin.akademiaspringaw3.service.CarService;
+import pl.gregorymartin.akademiaspringaw3.service.HateoasService;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.List;
@@ -21,18 +22,17 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RestController
 @RequestMapping("/cars")
 @EnableSwagger2
+public
 class CarController {
 
     private CarService service;
-    private HateoasController hateoasController;
+    private HateoasService hateoasService;
 
     //
 
-    public CarController(final CarService service, HateoasController hateoasController) {
+    public CarController(final CarService service, HateoasService hateoasService) {
         this.service = service;
-        this.hateoasController = hateoasController;
-
-        hateoasController.hateoasForFullRepository(this);
+        this.hateoasService = hateoasService;
     }
 
     public CarService getService() {
@@ -100,9 +100,10 @@ class CarController {
         Optional<Car> result = service.getCars().stream().filter(x -> x.getId() == newCar.getId()).findAny();
 
         if( !result.isPresent()){
-
+            hateoasService.hateoasForSingleObject(newCar);
             service.addNewCar(newCar);
-            hateoasController.hateoasForSingleObject(newCar);
+
+
             return new ResponseEntity(newCar,HttpStatus.OK);
         }
 
@@ -116,15 +117,16 @@ class CarController {
             MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE})
 
-    public ResponseEntity<Car> replaceCar(@PathVariable Integer id, @RequestBody Car newCar){
+    public ResponseEntity<EntityModel<Car>> replaceCar(@PathVariable Integer id, @RequestBody Car newCar){
 
             boolean delete =  service.deleteCar(id);
 
             if(delete){
 
                 newCar.setId(id);
-                hateoasController.hateoasForSingleObject(newCar);
+                hateoasService.hateoasForSingleObject(newCar);
                 service.addNewCar(newCar);
+
                 return new ResponseEntity(newCar, HttpStatus.OK);
 
             }else

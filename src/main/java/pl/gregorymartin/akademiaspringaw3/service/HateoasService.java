@@ -1,10 +1,13 @@
-package pl.gregorymartin.akademiaspringaw3.controller;
+package pl.gregorymartin.akademiaspringaw3.service;
 
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.event.EventListener;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.RestController;
+import pl.gregorymartin.akademiaspringaw3.controller.CarController;
 import pl.gregorymartin.akademiaspringaw3.model.Car;
 
 import java.util.List;
@@ -12,25 +15,27 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
-class HateoasController {
-    private CarController carController;
+public
+class HateoasService {
+    private CarService carService;
 
     //
 
-    public HateoasController( @Lazy CarController carController) {
-        this.carController = carController;
+    public HateoasService(@Lazy CarService carService) {
+        this.carService = carService;
 
     }
 
     //
 
-    public boolean hateoasForFullRepository(CarController carController){
-        List<Car> cars = carController.getService().getCars();
+    @EventListener(ApplicationReadyEvent.class)
+    public boolean hateoasForFullRepository(){
+        List<Car> cars = carService.getCars();
         Integer anyCarId = cars.stream()
                 .findAny()
                 .get().getId();
 
-        boolean singleLink = carController.getService()
+        boolean singleLink = carService
                 .getCars()
                 .get(anyCarId)
                 .hasLinks();
@@ -50,7 +55,7 @@ class HateoasController {
     //
 
     public EntityModel hateoasForSingleObject(Car car){
-            car.add(linkTo(CarController.class).slash(car.getId()).withSelfRel());
+        car.add(linkTo(CarController.class).slash(car.getId()).withSelfRel());
         Link link = linkTo(CarController.class).withSelfRel();
         return new EntityModel(car,link);
     }
