@@ -123,6 +123,7 @@ class CarController {
             if(delete){
 
                 newCar.setId(id);
+                hateoasController.hateoasForSingleObject(newCar);
                 service.addNewCar(newCar);
                 return new ResponseEntity(newCar, HttpStatus.OK);
 
