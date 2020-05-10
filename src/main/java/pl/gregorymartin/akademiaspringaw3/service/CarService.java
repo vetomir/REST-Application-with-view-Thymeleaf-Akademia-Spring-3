@@ -16,7 +16,6 @@ import java.util.Optional;
 public class CarService {
     private List<Car> cars;
 
-
     //
 
     public CarService() {
@@ -48,6 +47,8 @@ public class CarService {
         return true;
     }
 
+    //
+
     public Car partialUpdate(Car newCar, Integer id, Optional<Car> result){
                 if(newCar.getMark() != null){
                     result.get().setMark(newCar.getMark());
@@ -60,6 +61,8 @@ public class CarService {
                 }
                 return result.get();
     }
+
+    //
 
     public boolean deleteCar(Integer id){
         Optional<Car> carToDelete = cars.stream().filter(x -> x.getId() == id).findFirst();
