@@ -2,6 +2,7 @@ package pl.gregorymartin.akademiaspringaw3.service;
 
 import org.springframework.stereotype.Service;
 import pl.gregorymartin.akademiaspringaw3.model.Car;
+import pl.gregorymartin.akademiaspringaw3.model.CarRepo;
 import pl.gregorymartin.akademiaspringaw3.model.Colors;
 
 import java.util.ArrayList;
@@ -11,37 +12,37 @@ import java.util.Optional;
 
 @Service
 public class CarService {
-    private List<Car> cars;
+    private CarRepo repository;
     private HateoasService hateoasService;
 
     //
 
     public CarService() {
-        cars = new ArrayList<>();
-        cars.add(new Car(1,"BMW","F10", Colors.BLACK));
-        cars.add(new Car(2,"Audi","A6", Colors.ORANGE));
-        cars.add(new Car(3,"Ford","Focus", Colors.GREEN));
-        cars.add(new Car(4,"Mercedes","Klasse C", Colors.WHITE));
-        cars.add(new Car(5,"Fiat","Multipla", Colors.PINK));
-        cars.add(new Car(6,"Porsche","911", Colors.BLACK));
-        cars.add(new Car(7,"Volvo","S90", Colors.GRAY));
-        cars.add(new Car(8,"Alfa Romeo","Giulia", Colors.RED));
+        repository.save(new Car("BMW","F10", Colors.BLACK));
+        repository.save(new Car("Audi","A6", Colors.ORANGE));
+        repository.save(new Car("Ford","Focus", Colors.GREEN));
+        repository.save(new Car("Mercedes","Klasse C", Colors.WHITE));
+        repository.save(new Car("Fiat","Multipla", Colors.PINK));
+        repository.save(new Car("Porsche","911", Colors.BLACK));
+        repository.save(new Car("Volvo","S90", Colors.GRAY));
+        repository.save(new Car("Alfa Romeo","Giulia", Colors.RED));
     }
 
     //
 
-    public List<Car> getCars() {
-        return cars;
+    public CarRepo getRepository() {
+        return repository;
     }
 
-    public void setCars(final List<Car> cars) {
-        this.cars = cars;
+    public void setRepository(final CarRepo repository) {
+        this.repository = repository;
     }
+
 
     //
 
     public boolean addNewCar(Car car){
-        cars.add(car);
+        repository.save(car);
 
         return true;
     }
@@ -64,7 +65,7 @@ public class CarService {
     //
 
     public boolean deleteCar(Integer id){
-        Optional<Car> carToDelete = cars.stream().filter(x -> x.getId() == id).findFirst();
+        Optional<Car> carToDelete = repository.findAll().stream().filter(x -> x.getId() == id).findFirst();
         if(carToDelete.isPresent()){
             cars.remove(carToDelete.get());
             return true;

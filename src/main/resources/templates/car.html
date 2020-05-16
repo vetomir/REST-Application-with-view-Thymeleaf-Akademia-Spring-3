@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>tak</h1>
+<p1>Hello ziomek</p1>
+</br>
+
+<tr th:each="car: ${cars}">
+    <td th:text="${car.getId()}"/>
+    <td th:text="${car.getMark()}"/>
+    <td th:text="${car.getModel()}"/>
+    <td th:text="${car.getColors()}"/>
+    </br>
+</tr>
+
+<form th:action="@{/cars/add-car}" th:object="${newCar}" method="get">
+    <h1>add</h1>
+    <p>Mark: <input type="text" th:field="*{mark}"></p>
+    <p>Model: <input type="text" th:field="*{model}"></p>
+    <p>Color: <input type="text" th:field="*{colors}"></p>
+    <p><input type="submit" value="add new car"></p>
+</form>
+<form th:action="@{/cars/replace-car}" th:object="${newCar}" method="get">
+    <h1>replace</h1>
+    <p>Id: <input type="text" th:field="*{id}"></p>
+    <p>Mark: <input type="text" th:field="*{mark}"></p>
+    <p>Model: <input type="text" th:field="*{model}"></p>
+    <p>Color: <input type="text" th:field="*{colors}"></p>
+    <p><input type="submit" value="replace car"></p>
+</form>
+<form th:action="@{/cars/modify-car}" th:object="${newCar}" method="get">
+    <h1>modify</h1>
+    <p>Id: <input type="text" th:field="*{id}"></p>
+    <p>Mark: <input type="text" th:field="*{mark}"></p>
+    <p>Model: <input type="text" th:field="*{model}"></p>
+    <p>Color: <input type="text" th:field="*{colors}"></p>
+    <p><input type="submit" value="modify car"></p>
+</form>
+<form th:action="@{/cars/remove-car}" th:object="${newCar}" method="get">
+    <h1>delete</h1>
+    <p>Mark: <input type="text" th:field="*{id}"></p>
+    <p><input type="submit" value="delete car"></p>
+</form>
+
+</body>
+</html>

@@ -30,13 +30,13 @@ class HateoasService {
 
     @EventListener(ApplicationReadyEvent.class)
     public boolean hateoasForFullRepository(){
-        List<Car> cars = carService.getCars();
+        List<Car> cars = carService.getRepository().findAll();
         Integer anyCarId = cars.stream()
                 .findAny()
                 .get().getId();
 
         boolean singleLink = carService
-                .getCars()
+                .getRepository().findAll()
                 .get(anyCarId)
                 .hasLinks();
 
