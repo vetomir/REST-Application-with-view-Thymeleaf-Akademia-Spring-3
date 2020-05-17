@@ -12,6 +12,7 @@ import pl.gregorymartin.akademiaspringaw3.service.CarService;
 import pl.gregorymartin.akademiaspringaw3.service.HateoasService;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.io.OptionalDataException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,10 +21,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 
 @RestController
-@RequestMapping("/cars")
+@RequestMapping("/api/cars")
 @EnableSwagger2
-public
-class CarController {
+public class CarController {
 
     private CarService service;
     private HateoasService hateoasService;
@@ -51,7 +51,7 @@ class CarController {
 
     public ResponseEntity<List<Car>> getCars(){
 
-        return new ResponseEntity(service, HttpStatus.OK);
+        return new ResponseEntity(service.getRepository().findAll(), HttpStatus.OK);
     }
 
     //
@@ -61,7 +61,7 @@ class CarController {
             MediaType.APPLICATION_JSON_VALUE})
 
     public ResponseEntity<Car> getById(@PathVariable Integer id){
-        Optional<Car> result = service.getCars().stream().filter(x -> x.getId() == id).findFirst();
+        Optional<Car> result = service.getRepository().findById(id);
 
 
         if(result.isPresent()){
@@ -78,17 +78,18 @@ class CarController {
             MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE})
 
-    public ResponseEntity<List<Car>> getByColor(@RequestParam Colors color){
+    public ResponseEntity<List<Car>> getByColor(@RequestParam String color) {
 
-        try{
-            List<Car> result = service.getCars().stream().filter(x -> x.getColors() == color).collect(Collectors.toList());
-
+        try {
+            List<Car> result = service.findByColor(color);
             return new ResponseEntity(result, HttpStatus.OK);
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
+
     }
+
 
     //
 
@@ -97,18 +98,11 @@ class CarController {
             MediaType.APPLICATION_JSON_VALUE})
 
     public ResponseEntity<EntityModel<Car>> addCars(@RequestBody Car newCar){
-        Optional<Car> result = service.getCars().stream().filter(x -> x.getId() == newCar.getId()).findAny();
+        hateoasService.hateoasForSingleObject(newCar);
+        service.addNewCar(newCar);
 
-        if( !result.isPresent()){
-            hateoasService.hateoasForSingleObject(newCar);
-            service.addNewCar(newCar);
+        return new ResponseEntity(newCar,HttpStatus.OK);
 
-
-            return new ResponseEntity(newCar,HttpStatus.OK);
-        }
-
-        else
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     //
@@ -117,22 +111,14 @@ class CarController {
             MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE})
 
-    public ResponseEntity<EntityModel<Car>> replaceCar(@PathVariable Integer id, @RequestBody Car newCar){
-
-            boolean delete =  service.deleteCar(id);
-
-            if(delete){
-
-                newCar.setId(id);
-                hateoasService.hateoasForSingleObject(newCar);
-                service.addNewCar(newCar);
-
-                return new ResponseEntity(newCar, HttpStatus.OK);
-
-            }else
-
-                return new ResponseEntity(HttpStatus.BAD_REQUEST);
-
+    public ResponseEntity<EntityModel<Car>> putCar(@PathVariable Integer id, @RequestBody Car newCar){
+        try {
+            service.replaceCar(id, newCar);
+            Car updatedCar = service.getRepository().findById(id).get();
+            return new ResponseEntity(updatedCar, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
     }
 
     //
@@ -142,17 +128,13 @@ class CarController {
             MediaType.APPLICATION_JSON_VALUE})
 
     public ResponseEntity<Car> modifyCar(@PathVariable Integer id, @RequestBody Car newCar){
-        Optional<Car> result = service.getCars().stream().filter(x -> x.getId() == id).findFirst();
-
-            if(result.isPresent()){
-                service.partialUpdate(newCar, id, result);
-                return new ResponseEntity(result, HttpStatus.OK);
-            }
-            else if(!result.isPresent()){
-                return new ResponseEntity(result,HttpStatus.BAD_REQUEST);
-            }
-            else
+            try{
+                service.partialUpdate(newCar,id);
+                Car updatedCar = service.getRepository().findById(id).get();
+                return new ResponseEntity(updatedCar, HttpStatus.OK);
+            }catch (Exception e){
                 return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
     }
 
     //
@@ -166,8 +148,7 @@ class CarController {
         boolean delete =  service.deleteCar(id);
 
         if(delete){
-            Link link = linkTo(CarController.class).slash(id).withSelfRel();
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity("You deleted Car with id=" + id ,HttpStatus.OK);
         }
         else
             return new ResponseEntity(HttpStatus.NOT_FOUND);

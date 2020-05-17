@@ -2,6 +2,7 @@ package pl.gregorymartin.akademiaspringaw3.model;
 
 import javax.persistence.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -10,7 +11,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.hateoas.RepresentationModel;
 
 @Entity
-@Table(name = "Car")
 public class Car extends RepresentationModel
 {
 
@@ -18,13 +18,8 @@ public class Car extends RepresentationModel
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank
-    @NotNull
     private String mark;
-    @NotNull
     private String model;
-    @NotNull
-    @NotBlank
     private Colors colors;
 
 
@@ -33,11 +28,24 @@ public class Car extends RepresentationModel
     public Car() {
     }
 
-    public Car(@NotBlank @NotNull final String mark, @NotNull final String model, @NotNull @NotBlank final Colors colors) {
+    public Car(final String mark, final String model) {
+        this.mark = mark;
+        this.model = model;
+    }
+
+    public Car(final String mark, final String model, final Colors colors) {
         this.mark = mark;
         this.model = model;
         this.colors = colors;
     }
+
+    public Car(Integer id, final String mark,final String model, final Colors colors) {
+        this.id = id;
+        this.mark = mark;
+        this.model = model;
+        this.colors = colors;
+    }
+
 
     //
 

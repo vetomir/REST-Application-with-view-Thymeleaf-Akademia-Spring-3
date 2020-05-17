@@ -26,4 +26,5 @@ public interface CarRepo extends JpaRepository<Car, Integer> {
 
     @Override
     void delete(Car car);
+
 }

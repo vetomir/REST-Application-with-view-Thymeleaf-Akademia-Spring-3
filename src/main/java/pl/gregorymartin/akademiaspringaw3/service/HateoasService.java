@@ -9,6 +9,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.RestController;
 import pl.gregorymartin.akademiaspringaw3.controller.CarController;
 import pl.gregorymartin.akademiaspringaw3.model.Car;
+import pl.gregorymartin.akademiaspringaw3.model.CarRepo;
 
 import java.util.List;
 
@@ -17,12 +18,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RestController
 public
 class HateoasService {
-    private CarService carService;
+    private CarRepo repo;
 
     //
 
-    public HateoasService(@Lazy CarService carService) {
-        this.carService = carService;
+    public HateoasService(CarRepo repo) {
+        this.repo = repo;
 
     }
 
@@ -30,13 +31,12 @@ class HateoasService {
 
     @EventListener(ApplicationReadyEvent.class)
     public boolean hateoasForFullRepository(){
-        List<Car> cars = carService.getRepository().findAll();
+        List<Car> cars = repo.findAll();
         Integer anyCarId = cars.stream()
                 .findAny()
                 .get().getId();
 
-        boolean singleLink = carService
-                .getRepository().findAll()
+        boolean singleLink = repo.findAll()
                 .get(anyCarId)
                 .hasLinks();
 

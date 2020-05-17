@@ -1,5 +1,8 @@
 package pl.gregorymartin.akademiaspringaw3.service;
 
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.gregorymartin.akademiaspringaw3.model.Car;
 import pl.gregorymartin.akademiaspringaw3.model.CarRepo;
@@ -8,8 +11,9 @@ import pl.gregorymartin.akademiaspringaw3.model.Colors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-
+@Primary
 @Service
 public class CarService {
     private CarRepo repository;
@@ -17,7 +21,9 @@ public class CarService {
 
     //
 
-    public CarService() {
+    public CarService(CarRepo repository) {
+        this.repository = repository;
+
         repository.save(new Car("BMW","F10", Colors.BLACK));
         repository.save(new Car("Audi","A6", Colors.ORANGE));
         repository.save(new Car("Ford","Focus", Colors.GREEN));
@@ -26,6 +32,7 @@ public class CarService {
         repository.save(new Car("Porsche","911", Colors.BLACK));
         repository.save(new Car("Volvo","S90", Colors.GRAY));
         repository.save(new Car("Alfa Romeo","Giulia", Colors.RED));
+        repository.save(new Car("Audi","A6", Colors.ORANGE));
     }
 
     //
@@ -49,28 +56,64 @@ public class CarService {
 
     //
 
-    public Car partialUpdate(Car newCar, Integer id, Optional<Car> result){
-                if(newCar.getMark() != null){
-                    result.get().setMark(newCar.getMark());
+    public List<Car> findByColor(String colorName){
+
+        Colors color = Colors.valueOf(colorName.toUpperCase());
+
+        return repository.findAll().stream()
+                .filter(x -> x.getColors() == color)
+                .collect(Collectors.toCollection(ArrayList::new));
+
     }
-                if(newCar.getModel() != null){
-                    result.get().setModel(newCar.getModel());
+
+    public Car replaceCar(Integer id, Car newCar){
+        ;
+        newCar.setId(id);
+
+        Optional<Car> result = repository.findById(id)
+                .map(x -> {
+
+                    x.setMark(newCar.getMark());
+                    x.setModel(newCar.getModel());
+                    x.setColors(newCar.getColors());
+
+                    return repository.save(x);
+                });
+
+        return result.get();
     }
-                if(newCar.getColors() != null) {
-                    result.get().setColors(newCar.getColors());
-                }
-                return result.get();
+
+    public Car partialUpdate(Car newCar, Integer id){
+        Optional<Car> result = repository.findById(id)
+                .map(x -> {
+                    if (newCar.getMark() != null) {
+                        x.setMark(newCar.getMark());
+                    }
+                    if (newCar.getModel() != null) {
+                        x.setModel(newCar.getModel());
+                    }
+                    if (newCar.getColors() != null) {
+                        x.setColors(newCar.getColors());
+                    }
+                    return repository.save(x);
+                });
+
+
+            return result.get();
     }
 
     //
 
     public boolean deleteCar(Integer id){
-        Optional<Car> carToDelete = repository.findAll().stream().filter(x -> x.getId() == id).findFirst();
+        Optional<Car> carToDelete = repository.findById(id);
         if(carToDelete.isPresent()){
-            cars.remove(carToDelete.get());
+            repository.deleteById(id);
             return true;
         }
         else
             return false;
     }
+
+
+
 }
