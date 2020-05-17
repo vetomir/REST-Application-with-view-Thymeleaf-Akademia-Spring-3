@@ -86,13 +86,13 @@ public class CarService {
     public Car partialUpdate(Car newCar, Integer id){
         Optional<Car> result = repository.findById(id)
                 .map(x -> {
-                    if (newCar.getMark() != null) {
+                    if (newCar.getMark() != null && newCar.getMark() != "") {
                         x.setMark(newCar.getMark());
                     }
-                    if (newCar.getModel() != null) {
+                    if (newCar.getModel() != null && newCar.getModel() != "") {
                         x.setModel(newCar.getModel());
                     }
-                    if (newCar.getColors() != null) {
+                    if (newCar.getColors() != null && newCar.getColors() != Colors.NONE) {
                         x.setColors(newCar.getColors());
                     }
                     return repository.save(x);

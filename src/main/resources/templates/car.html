@@ -1,53 +1,90 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" >
-
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css" integrity="sha384-cg6SkqEOCV1NbJoCu11+bm0NvBRc8IYLRGXkmNrqUBfTjmMYwNKPWBTIKyw9mHNJ" crossorigin="anonymous">
+<link th:href="@{/styles/style.css}" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap" rel="stylesheet">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
 
-<h1>tak</h1>
-<p1>Hello ziomek</p1>
-</br>
 
 
-<tr th:each="car: ${cars}">
-    <td th:text="${car.getId()}"/>
-    <td th:text="${car.getMark()}"/>
-    <td th:text="${car.getModel()}"/>
-    <td th:text="${car.getColors()}"/>
-    </br>
-</tr>
+<div id="table">
+    <table class="pure-table">
+        <thead>
+        <tr>
+            <th>Mark</th>
+            <th>Model</th>
+            <th>Color</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="car: ${cars}">
+            <td th:text="${car.getMark()}"/>
+            <td th:text="${car.getModel()}"/>
+            <td th:text="${car.getColors().getDisplayValue()}"/>
+            <td>
+                <form action="#" th:action="@{'/remove-car?id={id}'(id=${car.getId()})}" th:method="delete" >
+                    <input type="hidden" name="_method" value="delete" />
+                    <button type="submit" class="button-error pure-button">X</button>
+                </form>
+            </td>
+            </br>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
-<form class="pure-form" th:action="@{/add-car}" th:object="${newCar}" method="get">
-    <h1>add</h1>
-    <p>Mark: <input type="text" th:field="*{mark}"></p>
-    <p>Model: <input type="text" th:field="*{model}"></p>
-    <p>Color: <input type="text" th:field="*{colors}"></p>
-    <p><input type="submit" value="add new car"></p>
-</form>
-<form class="pure-form" th:action="@{/replace-car}" th:object="${newCar}" method="get">
-    <h1>replace</h1>
-    <p>Id: <input type="text" th:field="*{id}"></p>
-    <p>Mark: <input type="text" th:field="*{mark}"></p>
-    <p>Model: <input type="text" th:field="*{model}"></p>
-    <p>Color: <input type="text" th:field="*{colors}"></p>
-    <p><input type="submit" value="replace car"></p>
-</form>
-<form class="pure-form" th:action="@{/modify-car}" th:object="${newCar}" method="get">
-    <h1>modify</h1>
-    <p>Id: <input type="text" th:field="*{id}"></p>
-    <p>Mark: <input type="text" th:field="*{mark}"></p>
-    <p>Model: <input type="text" th:field="*{model}"></p>
-    <p>Color: <input type="text" th:field="*{colors}"></p>
-    <p><input type="submit" value="modify car"></p>
-</form>
-<form class="pure-form" th:action="@{/remove-car}" th:object="${newCar}" method="get">
-    <h1>delete</h1>
-    <p>Mark: <input type="text" th:field="*{id}"></p>
-    <p><input type="submit" value="delete car"></p>
-</form>
-
+<div id="forms">
+    <form class="pure-form" th:action="@{/add-car}" th:object="${newCar}" method="get">
+        <h1 class="form-header">add new</h1>
+        <p>Mark: <input type="text" th:field="*{mark}"></p>
+        <p>Model: <input type="text" th:field="*{model}"></p>
+        <p>
+            Color:
+            <select name="color">
+                <option th:each="colorOpt : ${T(pl.gregorymartin.akademiaspringaw3.model.Colors).values()}"
+                        th:value="${colorOpt}" th:text="${colorOpt.displayValue}"></option>
+            </select>
+        </p>
+        <button type="submit" class="button-success pure-button">+</button>
+    </form>
+    <form class="pure-form" th:action="@{/replace-car}" th:object="${newCar}" method="get">
+        <h1 class="form-header">replace</h1>
+        <p>Id: <input type="text" th:field="*{id}"></p>
+        <p>Mark: <input type="text" th:field="*{mark}"></p>
+        <p>Model: <input type="text" th:field="*{model}"></p>
+        <p>
+            Color:
+            <select name="color">
+                <option th:each="colorOpt : ${T(pl.gregorymartin.akademiaspringaw3.model.Colors).values()}"
+                        th:value="${colorOpt}" th:text="${colorOpt.displayValue}"></option>
+            </select>
+        </p>
+        <button type="submit" class="button-secondary pure-button">Replace Car</button>
+    </form>
+    <form class="pure-form" th:action="@{/modify-car}" th:object="${newCar}" method="get">
+        <h1 class="form-header">modify</h1>
+        <p>Id: <input type="text" th:field="*{id}"></p>
+        <p>Mark: <input type="text" th:field="*{mark}"></p>
+        <p>Model: <input type="text" th:field="*{model}"></p>
+        <p>
+            Color:
+            <select name="color">
+                <option th:each="colorOpt : ${T(pl.gregorymartin.akademiaspringaw3.model.Colors).values()}"
+                        th:value="${colorOpt}" th:text="${colorOpt.displayValue}"></option>
+            </select>
+        </p>
+        <button type="submit" class="button-secondary pure-button">Modify Car</button>
+    </form>
+<!--    <form class="pure-form" th:action="@{/remove-car}" th:object="${newCar}" method="get">
+        <h1 class="form-header">delete</h1>
+        <p>Mark: <input type="text" th:field="*{id}"></p>
+        <button type="submit" class="button-error pure-button">Delete Car</button>
+    </form>-->
+</div>
 </body>
 </html>

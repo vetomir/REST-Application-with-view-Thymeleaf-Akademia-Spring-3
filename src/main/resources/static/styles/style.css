@@ -1,0 +1,77 @@
+body{
+    background:url("https://i.pinimg.com/originals/69/0c/f6/690cf657788ea89a9ecabc258a0388f1.jpg") no-repeat #ddd;
+    background-position: top;
+    background-attachment: fixed;
+    font-family: 'Noto Sans JP', sans-serif;
+    display: flex;
+    flex-direction: row;
+    justify-content:center;
+
+}
+#table{
+    margin: 20px;
+    display: flex;
+    justify-content:center;
+    object-fit: fill;
+    text-align: center;
+}
+table{
+    font-size: 30px;
+}
+th{
+    text-align: center;
+}
+
+#forms{
+    display: flex;
+    flex-direction:column;
+    margin: 20px;
+    justify-content:space-evenly;
+}
+.form-header{
+    text-align: center;
+}
+input{
+    width: 100%;
+
+}
+button{
+    margin: 0 auto;
+    background: none;
+    width: 100%;
+}
+form{
+    margin: 20px 0;
+}
+.button-success,
+.button-error,
+.button-warning,
+.button-secondary {
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.button-success {
+    background: rgb(28, 184, 65);
+    /* this is a green */
+}
+
+.button-error {
+    background: rgb(202, 60, 60);
+    /* this is a maroon */
+}
+
+.button-warning {
+    background: rgb(223, 117, 20);
+    /* this is an orange */
+}
+
+.button-secondary {
+    background: rgb(66, 184, 221);
+    /* this is a light blue */
+}
+select{
+    height: auto!important;
+    width: 100%;
+}
