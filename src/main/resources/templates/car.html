@@ -15,6 +15,7 @@
     <table class="pure-table">
         <thead>
         <tr>
+            <th>ID</th>
             <th>Mark</th>
             <th>Model</th>
             <th>Color</th>
@@ -23,6 +24,7 @@
         </thead>
         <tbody>
         <tr th:each="car: ${cars}">
+            <td th:text="${car.getId()}"/>
             <td th:text="${car.getMark()}"/>
             <td th:text="${car.getModel()}"/>
             <td th:text="${car.getColors().getDisplayValue()}"/>
